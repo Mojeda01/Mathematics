@@ -1,0 +1,65 @@
+%% EXAMPLE 1: Basic Eigenvalue and Eigenvector Calculation
+% This example demonstrates how to calculate the eigenvalues and
+% eigenvectors of a given matrix using the 'eig' function.
+
+clc, clearvars
+
+% define the matrix A
+A = [4, -2; 1, 1];
+
+% Calculate the eigenvalues and eigenvectors
+[V,D]=eig(A);
+
+% Display the results
+disp('Eigenvalues:')
+disp(diag(D)); % The eigenvalue are on the diagonal of D
+disp('Eigenvectors:');
+disp(V);
+
+% Explanation:
+% The 'eig' function is used to compute the eigenvalues and eigenvectors of
+% A.
+% V contains the eigenvectors, and D is a diagonal matrix with the
+% eigenvalues on the diagonal.
+
+%% EXAMPLE 2 - Eigenvalue Decomposition for Matrix Exponentiation
+% This example shows how to use eigenvalue decomposition to compute the
+% matrix exponential e^{At} for solving a differential equation.
+
+clc, clearvars
+
+% Define matrix A
+A = [0 -6 -1; 6 2 -16; -5 20 -10];
+
+% Calculate the eigenvalue decomposition
+[V,D]=eig(A);
+
+% Ddefine a time variable t
+t = 1;
+
+% Compute the matrix exponential using eigenvalue decomposition
+exp_At = V * diag(exp(diag(D) * t)) * inv(V);
+
+% Display the result
+disp('Matrix Exponential e^At:');
+disp(exp_At);
+
+% Explanation:
+% Eigenvalue decomposition (A = V*D*V^-') is used to compute the matrix
+% exponent. We compute e^D (where D is diagonal) by exponentiating the
+% diagonal elements, then reconstruct e^At.
+
+%% Example 3: Schur Decomposition
+% This example demonsrates the use of the 'schur' functiomn to perform
+% schur decomposition, which is useful for matrices that do not have a full
+% set of linearly independent eigenvectors.
+
+clc, clearvars
+
+% Define the matrix A
+A = [6 12 19; -9 -20 -33; 4 9 15];
+
+% Perform Schur decomposition
+[U,S] = schur(A);
+
+%
