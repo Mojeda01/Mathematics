@@ -1,0 +1,98 @@
+
+%% MATLAB Coding Example: Eigenvalue Methods in Financial Modeling
+% Practical Scenario: Risk assessment through portfolio optimization.
+% In financial modeling, eigenvalue methods can be applied to assess the
+% risk and optimize the portfolio. We will use historical stock return data
+% to calculate the covariance matrix, and then use Power iteration, inverse
+% iteration, and Rayleigh Quotient Iteration methods to analyze the
+% principal components and their corresponding eigenvalues. This helps in
+% understanding the variance and correlations in the portfolio.
+
+%% STEP 1: Data preparation
+% Load historical return data for a set of stocks.
+
+clc
+
+returns = [
+    0.01, 0.03, -0.02, 0.04, 0.05;
+    0.02, 0.01, -0.01, 0.03, 0.04;
+    -0.01, 0.04, 0.02, 0.01, -0.03;
+    0.03, -0.02, 0.01, 0.02, 0.03;
+    0.04, 0.01, 0.03, -0.02, 0.02
+];
+
+% Calculate the covariance matrix
+covMatrix = cov(returns);
+disp('Covariance matrix:');
+disp(covMatrix);
+
+%% Step 2 Power Iteration Method
+% Use Power iteration to find the dominant eigenvalue and its eigenvector.
+
+clc
+
+% Power Iteration Method to find the dominant eigenvalue and eigenvector
+n = size(covMatrix, 1);
+x = rand(n, 1); % Initial guess
+tol = 1e-6;
+maxIter = 1000;
+lambda_old = 0;
+
+for k = 1:maxIter
+    x = covMatrix * x;
+    x = x / norm(x);
+    lambda_new = x' * covMatrix * x;
+    if abs(lambda_new - lambda_old) < tol
+        break;
+    end
+    lambda_old = lambda_new;
+end
+
+dominantEigenvalue = lambda_new;
+dominantEigenvector = x;
+
+disp('Dominant Eigenvalue (Power Iteration):');
+disp(dominantEigenvalue);
+disp('Dominant Eigenvector (Power Iteration):');
+disp(dominantEigenvector);
+
+%% Step 3: Inverse Iteration Method
+% IIT method to find the smallest eigenvalue and eigenvector
+
+clc
+
+mu = 0; % Initial shift close to zero
+x = rand(n, 1); % Initial guess
+B = covMatrix - mu * eye(n);
+
+for k = 1:maxIter
+    y = B \ x;
+    x = y / norm(y);
+    mu = x' * covMatrix * x;
+end
+
+smallestEigenvalue = mu;
+smallestEigenvector = x;
+
+disp('Smallest Eigenvalue (Inverese iteration):');
+disp(smallestEigenvalue);
+disp('Smallest Eigenvector (Inverse Iteration):');
+disp(smallestEigenvector);
+
+%% Step 4: Rayleigh Quotient Iteration
+
+clc
+
+% Use RQI for a more refined eigenvalue approximation
+x = rand(n, 1); % Initial guess
+lambda = x' * covMatrix * x;
+
+for k = 1:maxIter
+    B = covMatrix - lambda * eye(n);
+    y = B\x;
+    x = y / norm(y);
+    lambda = x' * covMatrix * x;
+    if norm(covMatrix * x - lambda * x) < tol
+        break;
+    end
+end
